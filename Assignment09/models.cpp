@@ -338,7 +338,7 @@ void es2() {
 void es3() {
 	
 	int pointsPerCircle = 6;
-	int radius = 2;
+	int radius = 3;
 	int numPointsInMiddleOfHalfSphere = pointsPerCircle * (radius - 1);
 
 	int firstUpperDiamPointIndex = pointsPerCircle;
@@ -356,6 +356,10 @@ void es3() {
 
 	int writeOn;
 
+	//Mem organization
+
+	//[longerDiamPoints|upper diam points|lower diam points|topPoint|bottomPoint] <- points
+	//[internal Triangs from middle up| from middle down|uppest triangles|bottomest triangle] <- triangles
 
 	//// M3 : Sphere
 	// Replace the code below, that creates a simple triangle, with the one to create a sphere.
@@ -364,6 +368,8 @@ void es3() {
 	// vertices components (3 * number of vertices)
 	M3_vertices.resize(((bottomPointIndex + 1) * 3));
 	M3_indices.resize((firstBottomTriangleIndex + pointsPerCircle) * 3);
+
+	printf("M3_indices.size(): %d\n", M3_indices.size());
 	//between circles in sphere + top/bottom
 
 
@@ -387,21 +393,17 @@ void es3() {
 	M3_vertices[3 * bottomPointIndex + 2] = 0;
 	M3_vertices[3 * bottomPointIndex + 1] = -1;
 	
-	//Mem organization
-
-	//[longerDiamPoints|upper diam points|lower diam points|topPoint|bottomPoint] <- points
-	//[internal Triangs from middle up| from middle down|uppest triangles|bottomest triangle] <- triangles
 
 	for (int r = 1; r < radius; r++) {
 
 		printf("\n\nDefining layer %d\n", r);
 
-		printf("Writing on Points: %d\n", (firstUpperDiamPointIndex + (r - 1) * pointsPerCircle));
+		//printf("Writing on Points: %d\n", (firstUpperDiamPointIndex + (r - 1) * pointsPerCircle));
 		M3_vertices[3 * (firstUpperDiamPointIndex + (r - 1) * pointsPerCircle)] = cos(2 * pi / pointsPerCircle * 0) * cos(pi / 2 / radius * r);
 		M3_vertices[3 * (firstUpperDiamPointIndex + (r - 1) * pointsPerCircle) + 2] = sin(2 * pi / pointsPerCircle * 0) * cos(pi / 2 / radius * r);
 		M3_vertices[3 * (firstUpperDiamPointIndex + (r - 1) * pointsPerCircle) + 1] = sin(pi / 2 / radius * r);
 
-		printf("Writing on Points: %d\n", firstLowerPointIndex + (r - 1) * pointsPerCircle);
+		//printf("Writing on Points: %d\n", firstLowerPointIndex + (r - 1) * pointsPerCircle);
 		M3_vertices[3 * (firstLowerPointIndex + (r - 1) * pointsPerCircle)] = cos(2 * pi / pointsPerCircle * 0) * cos(pi / 2 / radius * r);
 		M3_vertices[3 * (firstLowerPointIndex + (r - 1) * pointsPerCircle) + 2] = sin(2 * pi / pointsPerCircle * 0) * cos(pi / 2 / radius * r);
 		M3_vertices[3 * (firstLowerPointIndex + (r - 1) * pointsPerCircle) + 1] = -sin(pi / 2 / radius * r);
@@ -413,21 +415,21 @@ void es3() {
 			definedUpPoint = firstUpperDiamPointIndex + (r - 1) * pointsPerCircle + point;
 			definedLowPoint = firstLowerPointIndex + (r - 1) * pointsPerCircle + point;
 
-			printf("Create point %d. DefinedLowPoint: %d\n", r, definedLowPoint);
+			//printf("Create point %d. DefinedLowPoint: %d\n", r, definedLowPoint);
 
-			printf("Writing on Points: %d\n", definedUpPoint);
+			//printf("Writing on Points: %d\n", definedUpPoint);
 
 			M3_vertices[3 * definedUpPoint] = cos(2 * pi / pointsPerCircle * point) * cos(pi / 2 / radius * r);
 			M3_vertices[3 * definedUpPoint + 2] = sin(2 * pi / pointsPerCircle * point) * cos(pi / 2 / radius * r);
 			M3_vertices[3 * definedUpPoint + 1] = sin(pi / 2 / radius * r);
 
-			printf("Writing on Points: %d\n", definedLowPoint);
+			//printf("Writing on Points: %d\n", definedLowPoint);
 			M3_vertices[3 * definedLowPoint] = cos(2 * pi / pointsPerCircle * point) * cos(pi / 2 / radius * r);
 			M3_vertices[3 * definedLowPoint + 2] = sin(2 * pi / pointsPerCircle * point) * cos(pi / 2 / radius * r);
 			M3_vertices[3 * definedLowPoint + 1] = -sin(pi / 2 / radius * r);
 			
 			//upSphere
-			printf("Writing on Indice: %d\n", (definedUpPoint - firstUpperDiamPointIndex - 1));
+			//printf("Writing on Indice: %d\n", (definedUpPoint - firstUpperDiamPointIndex - 1));
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1)] = definedUpPoint;
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex -1) + 1] = definedUpPoint - 1;
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1) + 2] = definedUpPoint - 1 - pointsPerCircle;
@@ -435,33 +437,40 @@ void es3() {
 
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1) + 3] = definedUpPoint;
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1) + 4] = definedUpPoint - pointsPerCircle;
-			M3_indices[6* (definedUpPoint - firstUpperDiamPointIndex - 1) + 5] = definedUpPoint - 1 - pointsPerCircle;
+			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1) + 5] = definedUpPoint - 1 - pointsPerCircle;
 
+#define DRAWLOWER
+
+#ifdef DRAWLOWER
 
 			//downSphere
-			writeOn = firstInternalTriangleFromMiddleDownIndex + definedLowPoint - firstLowerPointIndex - 1;
+			writeOn = firstInternalTriangleFromMiddleDownIndex + (definedLowPoint - firstLowerPointIndex - 1) * 2;
 			printf("Writing on Indice: %d\n", writeOn);
-			M3_indices[6 * writeOn] = definedLowPoint;
-			M3_indices[6 * writeOn + 1] = definedLowPoint - 1;
-			if (r==1)
-				M3_indices[6 * writeOn + 2] = point - 1;
+			M3_indices[3 * writeOn] = definedLowPoint;
+			M3_indices[3 * writeOn + 1] = definedLowPoint - 1;
+			if (r == 1)
+				M3_indices[3 * writeOn + 2] = point - 1;
 			else
-				M3_indices[6 * writeOn + 2] = definedLowPoint - 1 - pointsPerCircle;
+				M3_indices[3 * writeOn + 2] = definedLowPoint - 1 - pointsPerCircle;
 
 
-			M3_indices[6 * writeOn + 3] = definedLowPoint;
+			M3_indices[3 * writeOn + 3] = definedLowPoint;
 			if (r == 1) {
-				M3_indices[6 * writeOn + 4] = point;
-				M3_indices[6 * writeOn + 5] = point - 1;
+				M3_indices[3 * writeOn + 4] = point;
+				M3_indices[3 * writeOn + 5] = point - 1;
 			}
 			else {
-				M3_indices[6 * writeOn + 4] = definedLowPoint - pointsPerCircle;
-				M3_indices[6 * writeOn + 5] = definedLowPoint - 1 - pointsPerCircle;
+				M3_indices[3 * writeOn + 4] = definedLowPoint - pointsPerCircle;
+				M3_indices[3 * writeOn + 5] = definedLowPoint - 1 - pointsPerCircle;
 			}
+
+#endif // DRAWLOWER
+
+			
 			
 
-			printf("Draw: \n");
-			printf("Connecting %d, %d, %d\n", M3_indices[6 * writeOn + 3], M3_indices[6 * writeOn + 4], M3_indices[6 * writeOn + 5]);
+			//printf("Draw: \n");
+			//printf("Connecting %d, %d, %d\n", M3_indices[6 * writeOn + 3], M3_indices[6 * writeOn + 4], M3_indices[6 * writeOn + 5]);
 			//printf("Connecting %d, %d, %d\n\n", definedUpPoint, definedUpPoint - pointsPerCircle, definedUpPoint - 1 - pointsPerCircle);
 			
 
@@ -482,21 +491,48 @@ void es3() {
 		}
 
 
+#ifdef DRAWCLOSURE
 
 		//connecting first and last point of layer
+		writeOn = firstTopTriangleIndex + r * trianglesPerMiddleLayer - 2;
+		M3_indices[3 * writeOn] = firstUpperDiamPointIndex + (r - 1) * pointsPerCircle;
+		M3_indices[3 * writeOn + 1] = firstUpperDiamPointIndex + (r - 2) * pointsPerCircle;
+		M3_indices[3 * writeOn + 2] = firstUpperDiamPointIndex + (r - 1) * pointsPerCircle - 1;
 
-		writeOn = firstTopTriangleIndex + point - 1;
-		M3_indices[3 * writeOn] = definedUpPoint;
-		M3_indices[3 * writeOn + 1] = definedUpPoint - 1;
-		M3_indices[3 * writeOn + 2] = topPointIndex;
+		M3_indices[3 * writeOn + 3] = firstUpperDiamPointIndex + (r - 1) * pointsPerCircle;
+		M3_indices[3 * writeOn + 4] = firstUpperDiamPointIndex + r * pointsPerCircle - 1;
+		M3_indices[3 * writeOn + 5] = firstUpperDiamPointIndex + (r - 1) * pointsPerCircle - 1;
 
 
-		writeOn = firstBottomTriangleIndex + point - 1;
-		M3_indices[3 * writeOn] = definedLowPoint;
-		M3_indices[3 * writeOn + 1] = definedLowPoint - 1;
-		M3_indices[3 * writeOn + 2] = bottomPointIndex;
 
-	}
+		writeOn = firstInternalTriangleFromMiddleDownIndex + r * trianglesPerMiddleLayer - 2;
+		printf("WriteOn %d\n", writeOn);
+		printf("M3_indices.size(): %d\n", firstBottomTriangleIndex + pointsPerCircle);
+		M3_indices[3 * writeOn] = firstLowerPointIndex + (r - 1) * pointsPerCircle;
+		if (r == 1) {
+			M3_indices[3 * writeOn + 1] = 0;
+			M3_indices[3 * writeOn + 2] = pointsPerCircle - 1;
+		}
+		else {
+			M3_indices[3 * writeOn + 1] = firstLowerPointIndex + (r - 2) * pointsPerCircle;
+			M3_indices[3 * writeOn + 2] = firstLowerPointIndex + (r - 1) * pointsPerCircle - 1;
+		}
+
+		printf("SofarEverythingIsOk2");
+		M3_indices[3 * writeOn + 3] = firstLowerPointIndex + (r - 1) * pointsPerCircle;
+		M3_indices[3 * writeOn + 4] = firstLowerPointIndex + r * pointsPerCircle - 1;
+		if (r == 1) {
+			M3_indices[3 * writeOn + 5] = pointsPerCircle - 1;
+		}
+		else {
+			M3_indices[3 * writeOn + 5] = firstLowerPointIndex + (r - 1) * pointsPerCircle - 1;
+		}
+
+		printf("Connecting %d, %d, %d\n", M3_indices[3 * writeOn], M3_indices[3 * writeOn + 1], M3_indices[3 * writeOn + 2]);
+		printf("Connecting %d, %d, %d\n", M3_indices[3 * writeOn + 3], M3_indices[3 * writeOn + 4], M3_indices[3 * writeOn + 5]);
+#endif // DRAWCLOSURE
+
+		}
 
 
 	
