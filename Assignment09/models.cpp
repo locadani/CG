@@ -3,7 +3,9 @@
 void es1();
 void es2();
 void es3();
+void es4();
 void drawCircle(int nPoints, float z);
+void drawRotatedCircle(int currentRotation, int currentCircle);
 
 void printPoint(const std::string& input, std::vector<float> value, int pos);
 
@@ -17,68 +19,7 @@ void makeModels() {
 
 	es2();
 
-
 	es3();
-
-
-
-
-
-
-	//// M4 : Spring
-	// Replace the code below, that creates a simple octahedron, with the one to create a spring.
-	M4_vertices.resize(3 * 6);
-
-	// Vertices definitions
-	M4_vertices[0] = 0.0;
-	M4_vertices[1] = 1.414;
-	M4_vertices[2] = -1.0;
-	M4_vertices[3] = 0.0;
-	M4_vertices[4] = -1.414;
-	M4_vertices[5] = -1.0;
-	M4_vertices[6] = -1.0;
-	M4_vertices[7] = 0.0;
-	M4_vertices[8] = -2.0;
-	M4_vertices[9] = -1.0;
-	M4_vertices[10] = 0.0;
-	M4_vertices[11] = 0.0;
-	M4_vertices[12] = 1.0;
-	M4_vertices[13] = 0.0;
-	M4_vertices[14] = 0.0;
-	M4_vertices[15] = 1.0;
-	M4_vertices[16] = 0.0;
-	M4_vertices[17] = -2.0;
-
-
-	// Resizes the indices array. Repalce the values with the correct number of
-	// indices (3 * number of triangles)
-	M4_indices.resize(3 * 8);
-
-	// indices definitions
-	M4_indices[0] = 0;
-	M4_indices[1] = 2;
-	M4_indices[2] = 3;
-	M4_indices[3] = 1;
-	M4_indices[4] = 3;
-	M4_indices[5] = 2;
-	M4_indices[6] = 0;
-	M4_indices[7] = 3;
-	M4_indices[8] = 4;
-	M4_indices[9] = 1;
-	M4_indices[10] = 4;
-	M4_indices[11] = 3;
-	M4_indices[12] = 0;
-	M4_indices[13] = 4;
-	M4_indices[14] = 5;
-	M4_indices[15] = 1;
-	M4_indices[16] = 5;
-	M4_indices[17] = 4;
-	M4_indices[18] = 0;
-	M4_indices[19] = 5;
-	M4_indices[20] = 2;
-	M4_indices[21] = 1;
-	M4_indices[22] = 2;
-	M4_indices[23] = 5;
 }
 
 
@@ -226,11 +167,11 @@ void es2() {
 
 	//center up and down
 	M2_vertices[centerUpIndex * 3] = 0;
-	M2_vertices[centerUpIndex * 3+2] = 0;
-	M2_vertices[centerUpIndex * 3+1] = 1;
+	M2_vertices[centerUpIndex * 3 + 2] = 0;
+	M2_vertices[centerUpIndex * 3 + 1] = 1;
 	M2_vertices[centerDownIndex * 3] = 0;
 	M2_vertices[centerDownIndex * 3 + 2] = 0;
-	M2_vertices[centerDownIndex * 3+ 1] = -1;
+	M2_vertices[centerDownIndex * 3 + 1] = -1;
 
 
 	//1 first
@@ -333,12 +274,10 @@ void es2() {
 
 }
 
-
-
 void es3() {
-	
-	int pointsPerCircle = 6;
-	int radius = 3;
+
+	int pointsPerCircle = 15;
+	int radius = 15;
 	int numPointsInMiddleOfHalfSphere = pointsPerCircle * (radius - 1);
 
 	int firstUpperDiamPointIndex = pointsPerCircle;
@@ -369,7 +308,6 @@ void es3() {
 	M3_vertices.resize(((bottomPointIndex + 1) * 3));
 	M3_indices.resize((firstBottomTriangleIndex + pointsPerCircle) * 3);
 
-	printf("M3_indices.size(): %d\n", M3_indices.size());
 	//between circles in sphere + top/bottom
 
 
@@ -392,11 +330,11 @@ void es3() {
 	M3_vertices[3 * bottomPointIndex + 0] = 0;
 	M3_vertices[3 * bottomPointIndex + 2] = 0;
 	M3_vertices[3 * bottomPointIndex + 1] = -1;
-	
+
 
 	for (int r = 1; r < radius; r++) {
 
-		printf("\n\nDefining layer %d\n", r);
+		//printf("\n\nDefining layer %d\n", r);
 
 		//printf("Writing on Points: %d\n", (firstUpperDiamPointIndex + (r - 1) * pointsPerCircle));
 		M3_vertices[3 * (firstUpperDiamPointIndex + (r - 1) * pointsPerCircle)] = cos(2 * pi / pointsPerCircle * 0) * cos(pi / 2 / radius * r);
@@ -407,8 +345,8 @@ void es3() {
 		M3_vertices[3 * (firstLowerPointIndex + (r - 1) * pointsPerCircle)] = cos(2 * pi / pointsPerCircle * 0) * cos(pi / 2 / radius * r);
 		M3_vertices[3 * (firstLowerPointIndex + (r - 1) * pointsPerCircle) + 2] = sin(2 * pi / pointsPerCircle * 0) * cos(pi / 2 / radius * r);
 		M3_vertices[3 * (firstLowerPointIndex + (r - 1) * pointsPerCircle) + 1] = -sin(pi / 2 / radius * r);
-		
-		
+
+
 		for (int point = 1; point < pointsPerCircle; point++) {
 
 
@@ -427,11 +365,11 @@ void es3() {
 			M3_vertices[3 * definedLowPoint] = cos(2 * pi / pointsPerCircle * point) * cos(pi / 2 / radius * r);
 			M3_vertices[3 * definedLowPoint + 2] = sin(2 * pi / pointsPerCircle * point) * cos(pi / 2 / radius * r);
 			M3_vertices[3 * definedLowPoint + 1] = -sin(pi / 2 / radius * r);
-			
+
 			//upSphere
 			//printf("Writing on Indice: %d\n", (definedUpPoint - firstUpperDiamPointIndex - 1));
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1)] = definedUpPoint;
-			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex -1) + 1] = definedUpPoint - 1;
+			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1) + 1] = definedUpPoint - 1;
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1) + 2] = definedUpPoint - 1 - pointsPerCircle;
 
 
@@ -439,13 +377,10 @@ void es3() {
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1) + 4] = definedUpPoint - pointsPerCircle;
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1) + 5] = definedUpPoint - 1 - pointsPerCircle;
 
-#define DRAWLOWER
-
-#ifdef DRAWLOWER
 
 			//downSphere
 			writeOn = firstInternalTriangleFromMiddleDownIndex + (definedLowPoint - firstLowerPointIndex - 1) * 2;
-			printf("Writing on Indice: %d\n", writeOn);
+			//printf("Writing on Indice: %d\n", writeOn);
 			M3_indices[3 * writeOn] = definedLowPoint;
 			M3_indices[3 * writeOn + 1] = definedLowPoint - 1;
 			if (r == 1)
@@ -464,94 +399,98 @@ void es3() {
 				M3_indices[3 * writeOn + 5] = definedLowPoint - 1 - pointsPerCircle;
 			}
 
-#endif // DRAWLOWER
 
+			//draw last layer of triangles (with top/bottom point as common element
+			if (r == radius - 1) {
 			
-			
-
-			//printf("Draw: \n");
-			//printf("Connecting %d, %d, %d\n", M3_indices[6 * writeOn + 3], M3_indices[6 * writeOn + 4], M3_indices[6 * writeOn + 5]);
-			//printf("Connecting %d, %d, %d\n\n", definedUpPoint, definedUpPoint - pointsPerCircle, definedUpPoint - 1 - pointsPerCircle);
-			
-
-			/*if (r == radius - 1) {
+				//connecting first and last point of layer
 				writeOn = firstTopTriangleIndex + point - 1;
 				M3_indices[3 * writeOn] = definedUpPoint;
 				M3_indices[3 * writeOn + 1] = definedUpPoint - 1;
 				M3_indices[3 * writeOn + 2] = topPointIndex;
 
-
 				writeOn = firstBottomTriangleIndex + point - 1;
 				M3_indices[3 * writeOn] = definedLowPoint;
 				M3_indices[3 * writeOn + 1] = definedLowPoint - 1;
 				M3_indices[3 * writeOn + 2] = bottomPointIndex;
-			}*/
 
+				if (point == pointsPerCircle - 1) {
+					writeOn = firstTopTriangleIndex + point;
+					M3_indices[3 * writeOn] = definedUpPoint;
+					M3_indices[3 * writeOn + 1] = definedUpPoint - pointsPerCircle + 1;
+					M3_indices[3 * writeOn + 2] = topPointIndex;
 
+					writeOn = firstBottomTriangleIndex + point;
+					M3_indices[3 * writeOn] = definedLowPoint;
+					M3_indices[3 * writeOn + 1] = definedLowPoint - pointsPerCircle + 1;
+					M3_indices[3 * writeOn + 2] = bottomPointIndex;
+				}
+							
+			}
 		}
 
+		//draw closing "zip"
+		writeOn = trianglesPerMiddleLayer * r - 2;
+		M3_indices[3 * writeOn] = definedUpPoint;
+		M3_indices[3 * writeOn + 1] = definedUpPoint - pointsPerCircle + 1;
+		M3_indices[3 * writeOn + 2] = definedUpPoint - 2 * pointsPerCircle + 1;
+		M3_indices[3 * writeOn + 3] = definedUpPoint;
+		M3_indices[3 * writeOn + 4] = definedUpPoint - pointsPerCircle;
+		M3_indices[3 * writeOn + 5] = definedUpPoint - 2 * pointsPerCircle + 1;
 
-#ifdef DRAWCLOSURE
-
-		//connecting first and last point of layer
-		writeOn = firstTopTriangleIndex + r * trianglesPerMiddleLayer - 2;
-		M3_indices[3 * writeOn] = firstUpperDiamPointIndex + (r - 1) * pointsPerCircle;
-		M3_indices[3 * writeOn + 1] = firstUpperDiamPointIndex + (r - 2) * pointsPerCircle;
-		M3_indices[3 * writeOn + 2] = firstUpperDiamPointIndex + (r - 1) * pointsPerCircle - 1;
-
-		M3_indices[3 * writeOn + 3] = firstUpperDiamPointIndex + (r - 1) * pointsPerCircle;
-		M3_indices[3 * writeOn + 4] = firstUpperDiamPointIndex + r * pointsPerCircle - 1;
-		M3_indices[3 * writeOn + 5] = firstUpperDiamPointIndex + (r - 1) * pointsPerCircle - 1;
-
-
-
-		writeOn = firstInternalTriangleFromMiddleDownIndex + r * trianglesPerMiddleLayer - 2;
-		printf("WriteOn %d\n", writeOn);
-		printf("M3_indices.size(): %d\n", firstBottomTriangleIndex + pointsPerCircle);
-		M3_indices[3 * writeOn] = firstLowerPointIndex + (r - 1) * pointsPerCircle;
+		writeOn = firstInternalTriangleFromMiddleDownIndex + trianglesPerMiddleLayer * r - 2;
+		M3_indices[3 * writeOn] = definedLowPoint;
+		M3_indices[3 * writeOn + 1] = definedLowPoint - pointsPerCircle + 1;
 		if (r == 1) {
-			M3_indices[3 * writeOn + 1] = 0;
-			M3_indices[3 * writeOn + 2] = pointsPerCircle - 1;
+			M3_indices[3 * writeOn + 2] = 0;
 		}
 		else {
-			M3_indices[3 * writeOn + 1] = firstLowerPointIndex + (r - 2) * pointsPerCircle;
-			M3_indices[3 * writeOn + 2] = firstLowerPointIndex + (r - 1) * pointsPerCircle - 1;
+			M3_indices[3 * writeOn + 2] = definedLowPoint - 2 * pointsPerCircle + 1;
 		}
-
-		printf("SofarEverythingIsOk2");
-		M3_indices[3 * writeOn + 3] = firstLowerPointIndex + (r - 1) * pointsPerCircle;
-		M3_indices[3 * writeOn + 4] = firstLowerPointIndex + r * pointsPerCircle - 1;
+		M3_indices[3 * writeOn + 3] = definedLowPoint;
 		if (r == 1) {
-			M3_indices[3 * writeOn + 5] = pointsPerCircle - 1;
+			M3_indices[3 * writeOn + 4] = pointsPerCircle - 1;
+			M3_indices[3 * writeOn + 5] = 0;
 		}
 		else {
-			M3_indices[3 * writeOn + 5] = firstLowerPointIndex + (r - 1) * pointsPerCircle - 1;
+			M3_indices[3 * writeOn + 4] = definedLowPoint - pointsPerCircle;
+			M3_indices[3 * writeOn + 5] = definedLowPoint - 2 * pointsPerCircle + 1;
+		}	
+	}
+}
+
+void es4() {
+
+	int pointsPerCircle = 6;
+	int circlesPerRotation = 4;
+	int rotations = 1;
+
+	int trianglesConnectingTwoCircles = 2 * pointsPerCircle;
+
+	M4_vertices.resize(3 * (pointsPerCircle * circlesPerRotation * rotations));
+	M4_indices.resize(3 * (trianglesConnectingTwoCircles * circlesPerRotation * rotations));
+
+	//draw firstCircle
+	drawRotatedCircle(0, rotations, 0, circlesPerRotation, pointsPerCircle);
+	
+	int indexLastPointDefined = pointsPerCircle - 1;
+	int writeOn;
+	for (int currentRotation = 0; currentRotation < rotations; currentRotation++) {
+		for (int currentCircleInRotation = 1; currentCircleInRotation < circlesPerRotation; currentCircleInRotation++) {
+
+			drawRotatedCircle(currentRotation, rotations, currentCircleInRotation, circlesPerRotation, pointsPerCircle);
+			indexLastPointDefined += pointsPerCircle;
+
+			for (int pointToConnect = 0; pointToConnect < pointsPerCircle; pointToConnect++) {
+				writeOn = trianglesConnectingTwoCircles * (currentRotation * circlesPerRotation + currentCircleInRotation - 1);
+				M4_indices[3 * writeOn] =
+			}
+
+			//connect to previous circle
+
 		}
 
-		printf("Connecting %d, %d, %d\n", M3_indices[3 * writeOn], M3_indices[3 * writeOn + 1], M3_indices[3 * writeOn + 2]);
-		printf("Connecting %d, %d, %d\n", M3_indices[3 * writeOn + 3], M3_indices[3 * writeOn + 4], M3_indices[3 * writeOn + 5]);
-#endif // DRAWCLOSURE
-
-		}
-
-
-	
-
-	
-	/*
-
-	for (int i = 0; i < M3_vertices.size(); i++) {
-		if ((i) % 3 == 0)
-			printf("\nPoint %d: ", i / 3);
-		printf("%f, ", M3_vertices[i]);
 	}
-	*/
-	for (int i = 0; i < M3_indices.size(); i++) {
-		if ((i) % 3 == 0)
-			printf("\nTriangle %d: ", i / 3);
-		printf("%d, ", M3_indices[i]);
-	}
-
 }
 
 
@@ -602,7 +541,65 @@ void drawCircle(int nPoints, float z) {
 
 }
 
+void drawRotatedCircle(int currentRotation, int maxRotations, int currentCircle, int maxCircles, int nPoints) {
+
+	//float angle = (float)currentRotation / maxRotations * 2 * pi;
+
+	float angle = (float)currentCircle / maxCircles * 2 * pi;
+
+	int whereToWrite = (currentRotation * maxCircles + currentCircle) * nPoints;
+
+
+	//1 first
+	M4_vertices[whereToWrite * 3] = cos(0) * cos(angle);
+	M4_vertices[whereToWrite * 3 + 1] = sin(0);
+	M4_vertices[whereToWrite * 3 + 2] = sin(angle);
+
+	//TODO ora disegna sempre sullo stesso punto, deve spostare punto in cui si disegna
+	for (int point = 1; point < nPoints; point++) {
+		M4_vertices[3 * (whereToWrite + point)] = cos(2 * pi / nPoints * point) * cos(angle);
+		M4_vertices[3 * (whereToWrite + point) + 1] = sin(2 * pi / nPoints * point);
+		M4_vertices[3 * (whereToWrite + point) + 2] = sin(angle);
+	}
+}
+
+void prevCircles() {
+	/*
+	M2_vertices.resize((nPoints + 1) * 3);
+	//numCircleVertices + center
+	M2_indices.resize((nPoints) * 3);
+
+
+	//0 center
+	M2_vertices[(nPoints - 1) * 3] = 0;
+	M2_vertices[(nPoints - 1) * 3 + 1] = 0;
+	M2_vertices[(nPoints - 1) * 3 + 2] = 0;
+
+	//1 first
+	M2_vertices[0] = cos(0) * cos(angle);
+	M2_vertices[1] = sin(0);
+	M2_vertices[2] = sin(angle);
+
+
+	for (int point = 1; point < nPoints; point++) {
+
+		M2_vertices[3 * point] = cos(2 * pi / nPoints * point) * cos(angle);
+		M2_vertices[3 * point + 1] = sin(2 * pi / nPoints * point);
+		M2_vertices[3 * point + 2] = sin(angle);
+
+		M2_indices[(point - 1) * 3] = 0;
+		M2_indices[(point - 1) * 3 + 1] = point - 1;
+		M2_indices[(point - 1) * 3 + 2] = point;
+
+	}
+
+	M2_indices[(nPoints - 1) * 3] = 0; //primo punto cerchio
+	M2_indices[(nPoints - 1) * 3 + 1] = nPoints - 1; //centro
+	M2_indices[(nPoints - 1) * 3 + 2] = nPoints - 2; // ultimo punto cerchio*/
+}
+
+
 void printPoint(const std::string& input, std::vector<float> value, int pos) {
 
-	printf("%s -> x: %f, y: %f, z: %f\n", input.c_str(), value[pos], value[pos+2], value[pos+1]);
+	printf("%s -> x: %f, y: %f, z: %f\n", input.c_str(), value[pos], value[pos + 2], value[pos + 1]);
 }
