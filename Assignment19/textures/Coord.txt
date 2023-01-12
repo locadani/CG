@@ -1,0 +1,5 @@
+cubo: lato del cubo è lungo 128
+top lattina: raggio 128. Centro è a (640, 128)
+bottom lattina: centro (896, 128)
+inizio rosso coca: top (512, 256), bottom (512, 512)
+fine rosso coca: top (1024, 256), bottom (1024, 512)
