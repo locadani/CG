@@ -51,102 +51,14 @@ void es1() {
 
 	// Resizes the indices array. Repalce the values with the correct number of
 	// indices (number of triangles * 3)
-	#define indicesArrayLengthEs1 12 * 3
-	
+#define indicesArrayLengthEs1 12 * 3
+
 	M1_indices.resize(indicesArrayLengthEs1);
-/*
-	//FRONT FACE
-	
-	// first vertex of M1
-	int pos = 0;
-	x = -1.0;
-	y = -1.0;
-	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(-1.0, -1.0, -1.0);
-	M1_vertices[pos].norm = glm::vec3(
-		x * cos(pi/4), 
-		y * cos(pi/4), 
-		z * cos(pi/4));
-	M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
-
-	pos = 1;
-	// second vertex of M1
-	x = 1.0;
-	y = -1.0;
-	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(1.0, -1.0, -1.0);
-	M1_vertices[pos].norm = glm::vec3(0.0, 0.0, -1.0);
-	M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
-
-	pos = 2;
-	// third vertex of M1
-	x = 1.0;
-	y = 1.0;
-	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(1.0, 1.0, -1.0);
-	M1_vertices[pos].norm = glm::vec3(0.0, 0.0, -1.0);
-	M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
-
-	pos = 3;
-	// fourth vertex of M1
-	x = -1.0;
-	y = 1.0;
-	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(-1.0, 1.0, -1.0);
-	M1_vertices[pos].norm = glm::vec3(0.0, 0.0, -1.0);
-	M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
 
 
-	//FRONT FACE
-	pos = 4;
-	// 5 vertex of M1
-	x = -1.0;
-	y = -1.0;
-	z = 1.0;
-	M1_vertices[pos].pos = glm::vec3(-1.0, -1.0, 1.0);
-	M1_vertices[pos].norm = glm::vec3(0.0, 0.0, 1.0);
-	M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
 
-	pos = 5;
-	// 6 vertex of M1
-	x = -1.0;
-	y = -1.0;
-	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(1.0, -1.0, 1.0);
-	M1_vertices[pos].norm = glm::vec3(0.0, 0.0, 1.0);
-	M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
-
-	pos = 6;
-	// 7 vertex of M1
-	x = -1.0;
-	y = -1.0;
-	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(1.0, 1.0, 1.0);
-	M1_vertices[pos].norm = glm::vec3(0.0, 0.0, 1.0);
-	M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
-
-	pos = 7;
-	// 8 vertex of M1
-	x = -1.0;
-	y = -1.0;
-	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(-1.0, 1.0, 1.0);
-	M1_vertices[pos].norm = glm::vec3(0.0, 0.0, 1.0);
-	M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
-	*/
-
-	
-	
 	//REAR FACE
-	
+
 	// first vertex of M1
 	int pos = 0;
 	x = -1.0;
@@ -154,9 +66,9 @@ void es1() {
 	z = -1.0;
 	M1_vertices[pos].pos = glm::vec3(x, y, z);
 	M1_vertices[pos].norm = glm::vec3(
-		x * cos(pi/4), 
-		y * cos(pi/4), 
-		z * cos(pi/4));
+		x * cos(pi / 4),
+		y * cos(pi / 4),
+		z * cos(pi / 4));
 	//M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
 	//M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
 
@@ -390,7 +302,7 @@ void es3() {
 	int definedUpPoint, definedLowPoint;
 
 	int writeOn;
-	
+
 	float x, y, z;
 
 	//Mem organization
@@ -569,12 +481,15 @@ void es4() {
 	smallTheta = pi / pointsPerCircle * 2;
 	bigTheta = pi / circlesPerRotation * 2;
 
+	glm::vec3 orientationVector;
+
 
 	int writeOn, currentPoint;
 
 	for (int currentRotation = 0; currentRotation < rotations; currentRotation++) {
 
 		for (int currentCircleInRotation = 0; currentCircleInRotation < circlesPerRotation; currentCircleInRotation++) {
+			orientationVector.y = sin(bigTheta * currentCircleInRotation + bigTheta / 2);
 
 			for (int currentPointInCircle = 0; currentPointInCircle < pointsPerCircle; currentPointInCircle++) {
 
@@ -584,12 +499,17 @@ void es4() {
 					currentPointInCircle;
 				writeOn = currentPoint;
 
+				orientationVector.x = cos(smallTheta * currentPointInCircle + smallTheta / 2);
+				orientationVector.z = sin(smallTheta * currentPointInCircle + smallTheta / 2);
+
 				distanceFromCenter = (bigRadius + cos(smallTheta * currentPointInCircle) * smallRadius);
 				x = (bigRadius + smallRadius * cos(smallTheta * currentPointInCircle)) * sin(bigTheta * currentCircleInRotation);
-				y = (bigRadius + smallRadius * cos(smallTheta * currentPointInCircle)) * cos(bigTheta * currentCircleInRotation); 
+				y = (bigRadius + smallRadius * cos(smallTheta * currentPointInCircle)) * cos(bigTheta * currentCircleInRotation);
 				z = smallRadius * sin(smallTheta * currentPointInCircle) + deltaY * (currentRotation * circlesPerRotation + currentCircleInRotation);
 
 				M4_vertices[writeOn].pos = glm::vec3(x, y, z);
+				M4_vertices[writeOn].norm = orientationVector;
+
 
 				//connect to previous				
 				if (!(currentCircleInRotation == 0 && currentRotation == 0)) {
