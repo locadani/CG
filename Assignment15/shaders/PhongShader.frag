@@ -1,4 +1,5 @@
-#version 450#extension GL_ARB_separate_shader_objects : enable
+#version 450
+#extension GL_ARB_separate_shader_objects : enable
 
 layout(location = 0) in vec3 fragPos;
 layout(location = 1) in vec3 fragNorm;
@@ -31,20 +32,44 @@ vec3 direct_light_color(vec3 pos) {
 }
 
 vec3 point_light_dir(vec3 pos) {
-	// Point light direction	vec3 distanceVector = -(pos - gubo.lightPos);	float distanceModulus = length(distanceVector);	float g = gubo.coneInOutDecayExp.z;	float beta = gubo.coneInOutDecayExp.w;			vec3 l = distanceVector;			return normalize(l) * pow(g/distanceModulus, beta);
+	// Point light direction
+	vec3 pointToLight = normalize(gubo.lightPos - pos);
+	
+	return pointToLight;
 }
 
 vec3 point_light_color(vec3 pos) {
-	// Point light color	return vec3(gubo.lightColor.x, gubo.lightColor.y, gubo.lightColor.z);
+	// Point light color	
+	vec3 distanceVector = gubo.lightPos	 - pos;
+	float distanceModulus = length(distanceVector);
+	float g = gubo.coneInOutDecayExp.z;
+	float beta = gubo.coneInOutDecayExp.w;
+		
+	return gubo.lightColor * pow(g/distanceModulus, beta);
 }
 
 vec3 spot_light_dir(vec3 pos) {
 	// Spot light direction
-	vec3 distanceVector = -(pos - gubo.lightPos);	float distanceModulus = length(distanceVector);	float g = gubo.coneInOutDecayExp.z;	float beta = gubo.coneInOutDecayExp.w;			vec3 l = distanceVector;			return normalize(l) * pow(g/distanceModulus, beta);
+	vec3 distanceVector = normalize(gubo.lightPos - pos);
+	
+	return distanceVector;
 }
 
 vec3 spot_light_color(vec3 pos) {
-	// Spot light color	vec3 distanceVector = gubo.lightPos - pos;	float distanceModulus = length(distanceVector);	vec3 lx = normalize(distanceVector);	float g = gubo.coneInOutDecayExp.z;	float beta = gubo.coneInOutDecayExp.w;	float l = pow(g/distanceModulus, beta);		float toClampValue = (dot(lx, gubo.lightDir) - gubo.coneInOutDecayExp.x) / (gubo.coneInOutDecayExp.y - gubo.coneInOutDecayExp.x);	float clampedFactor = clamp(toClampValue, 0, 1);			return l * clampedFactor * gubo.lightDir;
+	// Spot light color
+    vec3 distanceVector = gubo.lightPos - pos;
+    float distanceModulus = length(distanceVector);
+    vec3 lx = normalize(distanceVector);
+    float g = gubo.coneInOutDecayExp.z;
+    float beta = gubo.coneInOutDecayExp.w;
+    float l = pow(g/distanceModulus, beta);
+    float toClampValue = 
+	(dot(lx, gubo.lightDir) - gubo.coneInOutDecayExp.x) 
+		/ 
+	(gubo.coneInOutDecayExp.y - gubo.coneInOutDecayExp.x);
+    float clampedFactor = clamp(toClampValue, 0, 1);
+    
+    return l * clampedFactor * gubo.lightColor;
 }
 
 /**** To from here *****/
