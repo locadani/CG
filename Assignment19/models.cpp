@@ -12,7 +12,6 @@ struct Vertex {
 void cube();
 void cylinder();
 
-void normalize();
 
 void setPoint(int pos, float x, float y, float z);
 
@@ -180,7 +179,7 @@ void cube() {
 
 	M1_vertices[pos].UV = glm::vec2(xT, yT); // faccia 3
 	M1_vertices[pos + 8].UV = glm::vec2(xT, yT); //faccia 5
-	M1_vertices[pos + 16].UV = glm::vec2(xT + x0, yT); //faccia 1
+	M1_vertices[pos + 16].UV = glm::vec2(xT, yT); //faccia 1
 	setPoint(pos, x, y, z);
 	
 	pos = 1;
@@ -193,16 +192,13 @@ void cube() {
 
 	M1_vertices[pos].UV = glm::vec2(xT, yT); //faccia 4
 	M1_vertices[pos + 8].UV = glm::vec2(xT, yT); //faccia 5
-	M1_vertices[pos + 16].UV = glm::vec2(xT + x0, yT); //faccia 1
+	M1_vertices[pos + 16].UV = glm::vec2(xT, yT); //faccia 1
 	setPoint(pos, x, y, z);
 
 	pos = 2;
 	x = 1.0;
 	y = -1.0;
 	z = 1.0;
-
-	xT = 2 * delta;
-	yT = 2 * delta;
 
 	M1_vertices[pos].UV = glm::vec2(3 * delta, 3 * delta); //faccia 4
 	M1_vertices[pos + 8].UV = glm::vec2(2 * delta, 4 * delta); // faccia 5
@@ -213,9 +209,6 @@ void cube() {
 	x = -1.0;
 	y = -1.0;
 	z = 1.0;
-
-	xT = delta;
-	yT = 2 * delta;
 
 	M1_vertices[pos].UV = glm::vec2(0.0f, 3 * delta); //faccia 3
 	M1_vertices[pos + 8].UV = glm::vec2(delta, 4 * delta); //faccia 5
@@ -232,7 +225,7 @@ void cube() {
 
 	M1_vertices[pos].UV = glm::vec2(xT, yT); //faccia 3
 	M1_vertices[pos + 8].UV = glm::vec2(xT, yT); //faccia 2
-	M1_vertices[pos + 16].UV = glm::vec2(xT + x0, yT); // faccia 1
+	M1_vertices[pos + 16].UV = glm::vec2(xT, yT); // faccia 1
 	setPoint(pos, x, y, z);
 
 	pos = 5;
@@ -245,16 +238,13 @@ void cube() {
 
 	M1_vertices[pos].UV = glm::vec2(xT, yT); //faccia 4
 	M1_vertices[pos + 8].UV = glm::vec2(xT, yT); //faccia 2
-	M1_vertices[pos + 16].UV = glm::vec2(xT + x0, yT); //faccia 1
+	M1_vertices[pos + 16].UV = glm::vec2(xT, yT); //faccia 1
 	setPoint(pos, x, y, z);
 
 	pos = 6;
 	x = 1.0;
 	y = 1.0;
 	z = 1.0;
-
-	xT = 2 * delta;
-	yT = 3 * delta;
 
 	M1_vertices[pos].UV = glm::vec2(3 * delta, 2 * delta); // faccia 4
 	M1_vertices[pos + 8].UV = glm::vec2(2 * delta, delta); //faccia 2
@@ -266,12 +256,9 @@ void cube() {
 	y = 1.0;
 	z = 1.0;
 
-	xT = 2 * delta;
-	yT = 3 * delta;
-
 	M1_vertices[pos].UV = glm::vec2(0.0f, 2 * delta); //faccia 3
 	M1_vertices[pos + 8].UV = glm::vec2(delta, delta); //faccia 2
-	M1_vertices[pos + 16].UV = glm::vec2(delta, 3 * delta); //faccia 6
+	M1_vertices[pos + 16].UV = glm::vec2(delta, delta); //faccia 6
 	setPoint(pos, x, y, z);
 
 
@@ -347,9 +334,9 @@ void cube() {
 
 void cylinder() {
 
-	double deltaPixel = 0.128;
+	double deltaPixel = 0.125;
 	double x0 = 4*deltaPixel, y0 = 0;// deltaPixel * 4;
-	int nCircleVertices = 4;
+	int nCircleVertices = 20;
 
 	glm::vec2 centerTopCan = glm::vec2(x0 + deltaPixel, y0 + deltaPixel);
 	glm::vec2 centerBottomCan = glm::vec2(x0 + 3 * deltaPixel, y0 + deltaPixel);
@@ -359,10 +346,9 @@ void cylinder() {
 	glm::vec2 bottomLeftCan = glm::vec2(x0, y0 + 4 * deltaPixel);
 	glm::vec2 bottomRightCan = glm::vec2(x0 + 4 * deltaPixel, y0 + 4 * deltaPixel);
 
-	int centerUpIndex = nCircleVertices * 2;
-	int centerDownIndex = nCircleVertices * 2 + 1;
-	int shiftForDuplicatePoint = centerDownIndex + 1;
-
+	int centerUpIndex = nCircleVertices * 4;
+	int centerDownIndex = centerUpIndex + 1;
+	int shiftForDuplicatePoint = 2 * nCircleVertices;
 
 	float x, y, z;
 	int pos;
@@ -397,21 +383,21 @@ void cylinder() {
 	y = 1;
 	z = cos(0);
 	M2_vertices[pos].pos = glm::vec3(x, y, z);
-	M2_vertices[pos].norm = glm::vec3(x, 0, z);
-	M2_vertices[pos].UV = topLeftCan;
+	M2_vertices[pos].norm = glm::vec3(0,y,0);
+	M2_vertices[pos].UV = glm::vec2(centerTopCan.x + x * deltaPixel, centerTopCan.y + z * deltaPixel);
 
 	M2_vertices[pos + shiftForDuplicatePoint].pos = glm::vec3(x, y, z);
-	M2_vertices[pos + shiftForDuplicatePoint].norm = glm::vec3(0, y, 0);
-	M2_vertices[pos + shiftForDuplicatePoint].UV = glm::vec2(centerTopCan.x + x, centerTopCan.y + z);
+	M2_vertices[pos + shiftForDuplicatePoint].norm = glm::vec3(x,0,z);
+	M2_vertices[pos + shiftForDuplicatePoint].UV = topLeftCan;
 
 	pos = 1;
 	y = -1;
 	M2_vertices[pos].pos = glm::vec3(x, y, z);
-	M2_vertices[pos].norm = glm::vec3(x, 0, z);
-	M2_vertices[pos].UV = bottomLeftCan;
+	M2_vertices[pos].norm = glm::vec3(0, y, 0);
+	M2_vertices[pos].UV = glm::vec2(centerBottomCan.x + x * deltaPixel, centerBottomCan.y + z * deltaPixel);
 	M2_vertices[pos + shiftForDuplicatePoint].pos = glm::vec3(x, y, z);
-	M2_vertices[pos + shiftForDuplicatePoint].norm = glm::vec3(0, y, 0);
-	M2_vertices[pos + shiftForDuplicatePoint].UV = glm::vec2(centerBottomCan.x + x, centerBottomCan.y + z);
+	M2_vertices[pos + shiftForDuplicatePoint].norm = glm::vec3(x, 0, z);
+	M2_vertices[pos + shiftForDuplicatePoint].UV = bottomLeftCan;
 
 
 	float currXOnPicture;
@@ -425,29 +411,29 @@ void cylinder() {
 		pos = 2 * line;
 		currXOnPicture = x0 + 4 * deltaPixel / nCircleVertices * line;
 		M2_vertices[pos].pos = glm::vec3(x, y, z);
-		M2_vertices[pos].norm = glm::vec3(x, 0, z);
-		M2_vertices[pos].UV = glm::vec2(currXOnPicture, topLeftCan.y);
+		M2_vertices[pos].norm = glm::vec3(0, y, 0);
+		M2_vertices[pos].UV = glm::vec2(centerTopCan.x + x * deltaPixel, centerTopCan.y + z * deltaPixel);
 		M2_vertices[pos + shiftForDuplicatePoint].pos = glm::vec3(x, y, z);
-		M2_vertices[pos + shiftForDuplicatePoint].norm = glm::vec3(0, y, 0);
-		M2_vertices[pos + shiftForDuplicatePoint].UV = glm::vec2(centerTopCan.x + x, centerTopCan.y + z);
+		M2_vertices[pos + shiftForDuplicatePoint].norm = glm::vec3(x, 0, z);
+		M2_vertices[pos + shiftForDuplicatePoint].UV = glm::vec2(currXOnPicture, topLeftCan.y);
 
 
 		pos = 2 * line + 1;
 		y = -1;
 		M2_vertices[pos].pos = glm::vec3(x, y, z);
-		M2_vertices[pos].norm = glm::vec3(x, 0, z);
-		M2_vertices[pos].UV = glm::vec2(currXOnPicture, bottomLeftCan.y);
+		M2_vertices[pos].norm = glm::vec3(0, y, 0);
+		M2_vertices[pos].UV = glm::vec2(centerBottomCan.x + x * deltaPixel, centerBottomCan.y + z * deltaPixel);
 		M2_vertices[pos + shiftForDuplicatePoint].pos = glm::vec3(x, y, z);
-		M2_vertices[pos + shiftForDuplicatePoint].norm = glm::vec3(0, y, 0);
-		M2_vertices[pos + shiftForDuplicatePoint].UV = glm::vec2(centerBottomCan.x + x, centerBottomCan.y + z);
+		M2_vertices[pos + shiftForDuplicatePoint].norm = glm::vec3(x, 0, z);
+		M2_vertices[pos + shiftForDuplicatePoint].UV = glm::vec2(currXOnPicture, bottomLeftCan.y);
 
 		//connect currentLine with previous line
-		M2_indices[(line - 1) * 12] = line * 2 - 2;
-		M2_indices[(line - 1) * 12 + 1] = line * 2 - 1;
-		M2_indices[(line - 1) * 12 + 2] = line * 2;
-		M2_indices[(line - 1) * 12 + 3] = line * 2;
-		M2_indices[(line - 1) * 12 + 4] = line * 2 - 1;
-		M2_indices[(line - 1) * 12 + 5] = line * 2 + 1;
+		M2_indices[(line - 1) * 12] = line * 2 - 2 + shiftForDuplicatePoint;
+		M2_indices[(line - 1) * 12 + 1] = line * 2 - 1 + shiftForDuplicatePoint;
+		M2_indices[(line - 1) * 12 + 2] = line * 2 + shiftForDuplicatePoint;
+		M2_indices[(line - 1) * 12 + 3] = line * 2 + shiftForDuplicatePoint;
+		M2_indices[(line - 1) * 12 + 4] = line * 2 - 1 + shiftForDuplicatePoint;
+		M2_indices[(line - 1) * 12 + 5] = line * 2 + 1 + shiftForDuplicatePoint;
 
 		//draw up triangle
 		M2_indices[(line - 1) * 12 + 6] = line * 2 - 2;
@@ -463,25 +449,24 @@ void cylinder() {
 	}
 
 	//last face of cylinder
-	M2_indices[(nCircleVertices - 1) * 12] = nCircleVertices * 2 - 2;
-	M2_indices[(nCircleVertices - 1) * 12 + 1] = nCircleVertices * 2 - 1;
-	M2_indices[(nCircleVertices - 1) * 12 + 2] = 0;
-	M2_indices[(nCircleVertices - 1) * 12 + 3] = 0;
-	M2_indices[(nCircleVertices - 1) * 12 + 4] = 1;
-	M2_indices[(nCircleVertices - 1) * 12 + 5] = nCircleVertices * 2 - 1;
+	M2_indices[(nCircleVertices - 1) * 12] = nCircleVertices * 2 - 2 + shiftForDuplicatePoint;
+	M2_indices[(nCircleVertices - 1) * 12 + 1] = nCircleVertices * 2 - 1 + shiftForDuplicatePoint;
+	M2_indices[(nCircleVertices - 1) * 12 + 2] = 0 + shiftForDuplicatePoint;
+	M2_indices[(nCircleVertices - 1) * 12 + 3] = 0 + shiftForDuplicatePoint;
+	M2_indices[(nCircleVertices - 1) * 12 + 4] = 1 + shiftForDuplicatePoint;
+	M2_indices[(nCircleVertices - 1) * 12 + 5] = nCircleVertices * 2 - 1 + shiftForDuplicatePoint;
 
 
 	//draw up triangle
 	M2_indices[(nCircleVertices - 1) * 12 + 6] = nCircleVertices * 2 - 2;
 	M2_indices[(nCircleVertices - 1) * 12 + 7] = 0;
-	M2_indices[(nCircleVertices - 1) * 12 + 8] = nCircleVertices * 2;
+	M2_indices[(nCircleVertices - 1) * 12 + 8] = centerUpIndex;
 
 	//draw down triangle
 	M2_indices[(nCircleVertices - 1) * 12 + 9] = nCircleVertices * 2 - 1;
 	M2_indices[(nCircleVertices - 1) * 12 + 10] = 1;
-	M2_indices[(nCircleVertices - 1) * 12 + 11] = nCircleVertices * 2 + 1;
+	M2_indices[(nCircleVertices - 1) * 12 + 11] = centerDownIndex;
 
-	normalize();
 }
 
 
@@ -497,12 +482,6 @@ void setPoint(int pos, float x, float y, float z) {
 	}
 }
 
-void normalize() {
-	for (int i = 0; i < M2_vertices.size(); i++) {
-		M2_vertices[i].UV.x = M2_vertices[i].UV.x / (pictureSize / 1000.0);
-		M2_vertices[i].UV.y = M2_vertices[i].UV.y / (pictureSize / 1000.0);
-	}
-}
 
 void print(int pos) {
 	int secondPos = pos + 8;
