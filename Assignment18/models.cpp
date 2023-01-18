@@ -19,7 +19,7 @@ void es3();
 void es4();
 void drawCircle(int nPoints, float z);
 void drawRotatedCircle(int currentRotation, int currentCircle);
-
+void setPoint(int pos, float x, float y, float z);
 void printPoint(const std::string& input, std::vector<float> value, int pos);
 
 // this function creates the geometries to be shown, and output thems
@@ -51,7 +51,7 @@ void es1() {
 
 	// Resizes the indices array. Repalce the values with the correct number of
 	// indices (number of triangles * 3)
-#define indicesArrayLengthEs1 12 * 3
+	#define indicesArrayLengthEs1 12 * 3
 
 	M1_indices.resize(indicesArrayLengthEs1);
 
@@ -64,127 +64,99 @@ void es1() {
 	x = -1.0;
 	y = -1.0;
 	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(x, y, z);
-	M1_vertices[pos].norm = glm::vec3(
-		x * cos(pi / 4),
-		y * cos(pi / 4),
-		z * cos(pi / 4));
-	//M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	//M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
+	setPoint(pos, x, y, z);
 
 	pos = 1;
-	// second vertex of M1
 	x = 1.0;
 	y = -1.0;
 	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(x, y, z);
-	M1_vertices[pos].norm = glm::vec3(
-		x * cos(pi / 4),
-		y * cos(pi / 4),
-		z * cos(pi / 4));
-	//M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	//M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
+	setPoint(pos, x, y, z);
 
 	pos = 2;
-	// third vertex of M1
 	x = 1.0;
-	y = 1.0;
-	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(x, y, z);
-	M1_vertices[pos].norm = glm::vec3(
-		x * cos(pi / 4),
-		y * cos(pi / 4),
-		z * cos(pi / 4));
-	//M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	//M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
+	y = -1.0;
+	z = 1.0;
+	setPoint(pos, x, y, z);
 
 	pos = 3;
-	// fourth vertex of M1
+	x = -1.0;
+	y = -1.0;
+	z = 1.0;
+	setPoint(pos, x, y, z);
+
+	pos = 4;
 	x = -1.0;
 	y = 1.0;
 	z = -1.0;
-	M1_vertices[pos].pos = glm::vec3(x, y, z);
-	M1_vertices[pos].norm = glm::vec3(
-		x * cos(pi / 4),
-		y * cos(pi / 4),
-		z * cos(pi / 4));
-	//M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	//M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
-
-
-	//FRONT FACE
-	pos = 4;
-	// 5 vertex of M1
-	x = -1.0;
-	y = -1.0;
-	z = 1.0;
-	M1_vertices[pos].pos = glm::vec3(x, y, z);
-	M1_vertices[pos].norm = glm::vec3(
-		x * cos(pi / 4),
-		y * cos(pi / 4),
-		z * cos(pi / 4));
-	//M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	//M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
+	setPoint(pos, x, y, z);
 
 	pos = 5;
-	// 6 vertex of M1
 	x = 1.0;
-	y = -1.0;
-	z = 1.0;
-	M1_vertices[pos].pos = glm::vec3(x, y, z);
-	M1_vertices[pos].norm = glm::vec3(
-		x * cos(pi / 4),
-		y * cos(pi / 4),
-		z * cos(pi / 4));
-	//M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	//M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
+	y = 1.0;
+	z = -1.0;
+	setPoint(pos, x, y, z);
 
 	pos = 6;
-	// 7 vertex of M1
 	x = 1.0;
 	y = 1.0;
 	z = 1.0;
-	M1_vertices[pos].pos = glm::vec3(x, y, z);
-	M1_vertices[pos].norm = glm::vec3(
-		x * cos(pi / 4),
-		y * cos(pi / 4),
-		z * cos(pi / 4));
-	//M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	//M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
+	setPoint(pos, x, y, z);
 
 	pos = 7;
-	// 8 vertex of M1
 	x = -1.0;
 	y = 1.0;
 	z = 1.0;
-	M1_vertices[pos].pos = glm::vec3(x, y, z);
-	M1_vertices[pos].norm = glm::vec3(
-		x * cos(pi / 4),
-		y * cos(pi / 4),
-		z * cos(pi / 4));
-	//M1_vertices[pos + 8].norm = glm::vec3(0.0, -1.0, 0.0);
-	//M1_vertices[pos + 16].norm = glm::vec3(-1.0, 0.0, 0.0);
+	setPoint(pos, x, y, z);
 
 	int indices[indicesArrayLengthEs1] = {
-			0,1,2, //fb
-			3,2,0, //ft
-			4,7,0, //lt
-			3,7,0, //lb
-			3,7,2, //tl
-			7,2,6, //tr
-			6,2,1, //rt
-			6,5,1, //lb
-			0,4,5, //bl
-			5,0,1, //br
-			7,4,5, //fl
-			5,7,6
+
+
+		//faccia 5 - y
+		0,1,2, //fb
+		3,2,0, //ft
+
+		//faccia 3 - x
+		4,7,0, //lt
+		3,7,0, //lb
+
+		//faccia 6 - z
+		3,7,2, //tl
+		7,2,6, //tr
+
+		//faccia 4 - x
+		6,2,1, //rt
+		6,5,1, //lb
+
+		//faccia 1 - z
+		0,4,5, //bl
+		0,1,5, //br
+
+		//faccia 2 - y
+		7,4,5, //bl
+		5,7,6  //br
 	};
 
+	//add 8 to y direction faces
+	pos = 0;
+	for (int i = pos * 6; i < (pos + 1) * 6; i++)
+		indices[i] += 8;
 
-	printf("setInces is next thing\n");
-	for (int i = 0; i < indicesArrayLengthEs1; i++) {
-		M1_indices.push_back(indices[i]);
-	}
+	pos = 5;
+	for (int i = pos * 6; i < (pos + 1) * 6; i++)
+		indices[i] += 8;
+
+	//add 16 to y direction faces
+	pos = 2;
+	for (int i = pos * 6; i < (pos + 1) * 6; i++)
+		indices[i] += 16;
+
+	pos = 4;
+	for (int i = pos * 6; i < (pos + 1) * 6; i++)
+		indices[i] += 16;
+
+	for (int i = 0; i < indicesArrayLengthEs1; i++)
+		M1_indices[i] = indices[i];
+
 }
 
 void es2() {
@@ -534,5 +506,15 @@ void es4() {
 		}
 	}
 
+}
+
+void setPoint(int pos, float x, float y, float z) {
+
+	M1_vertices[pos].pos = glm::vec3(x, y, z);
+	M1_vertices[pos + 8].pos = glm::vec3(x, y, z);
+	M1_vertices[pos + 16].pos = glm::vec3(x, y, z);
+	M1_vertices[pos].norm = glm::vec3(x, 0.0f, 0.0f);
+	M1_vertices[pos + 8].norm = glm::vec3(0.0f, y, 0.0f);
+	M1_vertices[pos + 16].norm = glm::vec3(0.0f, 0.0f, z);
 }
 
