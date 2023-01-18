@@ -13,53 +13,42 @@ std::vector<Vertex> M4_vertices;
 
 #define pi 3.14
 
-void es1();
-void es2();
-void es3();
-void es4();
-void drawCircle(int nPoints, float z);
-void drawRotatedCircle(int currentRotation, int currentCircle);
+void cube_1();
+void cylinder_2();
+void sphere_3();
+void spring_4();
+
 void setPoint(int pos, float x, float y, float z);
-void printPoint(const std::string& input, std::vector<float> value, int pos);
 
 // this function creates the geometries to be shown, and output thems
 // in global variables M1_vertices and M1_indices to M4_vertices and M4_indices
 void makeModels() {
 
-	es1();
+	cube_1();
 
-	es2();
+	cylinder_2();
 
-	es3();
+	sphere_3();
 
-	es4();
+	spring_4();
 }
 
 
 
-void es1() {
+void cube_1() {
+	//// M1 : Cube
 
 	float x, y, z;
-	//// M1 : Cube
-	// Replace the code below, that creates a simple square, with the one to create a cube.
+	int shift = 8;
 
+	#define indicesArrayLengthEs1 12 * 3
+	
 	// Resizes the vertices array. Repalce the values with the correct number of
 	// vertices components (number of vertices * normalsPerVertex)
 	M1_vertices.resize(8 * 3);
-
-
-
-	// Resizes the indices array. Repalce the values with the correct number of
-	// indices (number of triangles * 3)
-	#define indicesArrayLengthEs1 12 * 3
-
 	M1_indices.resize(indicesArrayLengthEs1);
 
 
-
-	//REAR FACE
-
-	// first vertex of M1
 	int pos = 0;
 	x = -1.0;
 	y = -1.0;
@@ -159,65 +148,94 @@ void es1() {
 
 }
 
-void es2() {
+void cylinder_2() {
 
-	int nCircleVertices = 20;
+	int nCircleVertices = 4;
 
-	int centerUpIndex = nCircleVertices * 2;
-	int centerDownIndex = nCircleVertices * 2 + 1;
+	int centerUpIndex = nCircleVertices * 4;
+	int centerDownIndex = centerUpIndex + 1;
+	int shift = 2 * nCircleVertices;
+
 
 	float x, y, z;
+	int pos;
 
 
 	std::vector<float> circleVertices;
 	std::vector<uint32_t> circleIndices;
 
-	M2_vertices.resize((nCircleVertices + 1) * 2);
+	//(vertici * 2 (due normali) + 1 (centro top/bottom)) * 2 (sopra e sotto)
+	/*
+		points associated to vertical norms are stored in the first part of the array [vertex0, vertex0_below, vertex1, vertex1_below]
+		then the horizontal ones [same as before]
+		eventually the two centers of the top and bottom faces
+	*/
+	M2_vertices.resize((nCircleVertices * 2 + 1) * 2);
 
 	//numCircleVertices + center
 	M2_indices.resize(nCircleVertices * 4 * 3);
 
 
 	//center up and down
-	M2_vertices[centerUpIndex].pos = glm::vec3(0, 1, 0);
-	M2_vertices[centerUpIndex].norm = glm::vec3(0, 1, 0);
+	x = 0;
+	y = 1;
+	z = 0;
+	M2_vertices[centerUpIndex].pos = glm::vec3(x, y, z);
+	M2_vertices[centerUpIndex].norm = glm::vec3(x, y, z);
 
-	M2_vertices[centerDownIndex].pos = glm::vec3(0, -1, 0);
-	M2_vertices[centerDownIndex].norm = glm::vec3(0, -1, 0);
+	y = -1;
+	M2_vertices[centerDownIndex].pos = glm::vec3(x, y, z);
+	M2_vertices[centerDownIndex].norm = glm::vec3(x, y, z);
 
 	//1 first
-	M2_vertices[0].pos = glm::vec3(cos(0), 1, sin(0));
-	M2_vertices[0].norm = glm::vec3(cos(0), 1, sin(0));
+	pos = 0;
+	x = 0;
+	y = 1;
+	z = cos(0);
+	M2_vertices[pos].pos = glm::vec3(x, y, z);
+	M2_vertices[pos + shift].pos = glm::vec3(x, y, z);
+	M2_vertices[pos].norm = glm::vec3(0, y, 0); 
+	M2_vertices[pos + shift].norm = glm::vec3(x, 0, z);
 
-	M2_vertices[1].pos = glm::vec3(cos(0), -1, sin(0));
-	M2_vertices[1].norm = glm::vec3(cos(0), -1, sin(0));
+	pos = 1;
+	y = -1;
+	M2_vertices[pos].pos = glm::vec3(x, y, z);
+	M2_vertices[pos + shift].pos = glm::vec3(x, y, z);
+	M2_vertices[pos].norm = glm::vec3(0, y, 0);
+	M2_vertices[pos + shift].norm = glm::vec3(x, 0, z);
 
 
 	for (int line = 1; line < nCircleVertices; line++) {
-
-		printf("Line: %d\n", line);
+		pos = 2 * line;
 
 
 		//points of new line
-		x = cos(2 * pi / nCircleVertices * line);
+		x = sin(2 * pi / nCircleVertices * line);
 		y = 1;
-		z = sin(2 * pi / nCircleVertices * line);
-
-		M2_vertices[2 * line].pos = glm::vec3(x, y, z);
-		M2_vertices[2 * line].norm = glm::vec3(x, y, z);
+		z = cos(2 * pi / nCircleVertices * line);
 
 
+		M2_vertices[pos].pos = glm::vec3(x, y, z);
+		M2_vertices[pos + shift].pos = glm::vec3(x, y, z);
+		M2_vertices[pos].norm = glm::vec3(0, y, 0);
+		M2_vertices[pos + shift].norm = glm::vec3(x, 0, z);
+
+
+		pos = 2 * line + 1;
 		y = -1;
-		M2_vertices[2 * line + 1].pos = glm::vec3(x, y, z);
-		M2_vertices[2 * line + 1].norm = glm::vec3(x, y, z);
+		M2_vertices[pos].pos = glm::vec3(x, y, z);
+		M2_vertices[pos + shift].pos = glm::vec3(x, y, z);
+		M2_vertices[pos].norm = glm::vec3(0, y, 0);
+		M2_vertices[pos + shift].norm = glm::vec3(x, 0, z);
+
 
 		//connect currentLine with previous line
-		M2_indices[(line - 1) * 12] = line * 2 - 2;
-		M2_indices[(line - 1) * 12 + 1] = line * 2 - 1;
-		M2_indices[(line - 1) * 12 + 2] = line * 2;
-		M2_indices[(line - 1) * 12 + 3] = line * 2;
-		M2_indices[(line - 1) * 12 + 4] = line * 2 - 1;
-		M2_indices[(line - 1) * 12 + 5] = line * 2 + 1;
+		M2_indices[(line - 1) * 12] = line * 2 - 2 + shift;
+		M2_indices[(line - 1) * 12 + 1] = line * 2 - 1 + shift;
+		M2_indices[(line - 1) * 12 + 2] = line * 2 + shift;
+		M2_indices[(line - 1) * 12 + 3] = line * 2 + shift;
+		M2_indices[(line - 1) * 12 + 4] = line * 2 - 1 + shift;
+		M2_indices[(line - 1) * 12 + 5] = line * 2 + 1 + shift;
 
 		//draw up triangle
 		M2_indices[(line - 1) * 12 + 6] = line * 2 - 2;
@@ -231,30 +249,30 @@ void es2() {
 
 
 	}
-	printf("begn index\n");
+	
 	//last face of cylinder
-	M2_indices[(nCircleVertices - 1) * 12] = nCircleVertices * 2 - 2;
-	M2_indices[(nCircleVertices - 1) * 12 + 1] = nCircleVertices * 2 - 1;
-	M2_indices[(nCircleVertices - 1) * 12 + 2] = 0;
-	M2_indices[(nCircleVertices - 1) * 12 + 3] = 0;
-	M2_indices[(nCircleVertices - 1) * 12 + 4] = 1;
-	M2_indices[(nCircleVertices - 1) * 12 + 5] = nCircleVertices * 2 - 1;
+	M2_indices[(nCircleVertices - 1) * 12] = nCircleVertices * 2 - 2 + shift;
+	M2_indices[(nCircleVertices - 1) * 12 + 1] = nCircleVertices * 2 - 1 + shift;
+	M2_indices[(nCircleVertices - 1) * 12 + 2] = 0 + shift;
+	M2_indices[(nCircleVertices - 1) * 12 + 3] = 0 + shift;
+	M2_indices[(nCircleVertices - 1) * 12 + 4] = 1 + shift;
+	M2_indices[(nCircleVertices - 1) * 12 + 5] = nCircleVertices * 2 - 1 + shift;
 
 
 	//draw up triangle
 	M2_indices[(nCircleVertices - 1) * 12 + 6] = nCircleVertices * 2 - 2;
 	M2_indices[(nCircleVertices - 1) * 12 + 7] = 0;
-	M2_indices[(nCircleVertices - 1) * 12 + 8] = nCircleVertices * 2;
+	M2_indices[(nCircleVertices - 1) * 12 + 8] = centerUpIndex;
 
 	//draw down triangle
 	M2_indices[(nCircleVertices - 1) * 12 + 9] = nCircleVertices * 2 - 1;
 	M2_indices[(nCircleVertices - 1) * 12 + 10] = 1;
-	M2_indices[(nCircleVertices - 1) * 12 + 11] = nCircleVertices * 2 + 1;
-	printf("end index\n");
-
+	M2_indices[(nCircleVertices - 1) * 12 + 11] = centerDownIndex;
+	
 }
 
-void es3() {
+void sphere_3() {
+	//// M3 : Sphere
 
 	int pointsPerCircle = 15;
 	int radius = 15;
@@ -282,21 +300,16 @@ void es3() {
 	//[longerDiamPoints|upper diam points|lower diam points|topPoint|bottomPoint] <- points
 	//[internal Triangs from middle up| from middle down|uppest triangles|bottomest triangle] <- triangles
 
-	//// M3 : Sphere
-	// Replace the code below, that creates a simple triangle, with the one to create a sphere.
 
 	// Resizes the vertices array. Repalce the values with the correct number of
 	// vertices components (3 * number of vertices)
 	M3_vertices.resize(bottomPointIndex + 1);
 	M3_indices.resize((firstBottomTriangleIndex + pointsPerCircle) * 3);
 
-	//between circles in sphere + top/bottom
-
 
 	//define biggest diameter
 	for (int point = 0; point < pointsPerCircle; point++) {
 
-		//printf("Writing on Points: %d\n", point);
 		x = cos(2 * pi / pointsPerCircle * point);
 		y = 0;
 		z = sin(2 * pi / pointsPerCircle * point);
@@ -304,11 +317,9 @@ void es3() {
 		M3_vertices[point].norm = glm::vec3(x, y, z);
 	}
 
-	//printf("Writing on Points: %d\n", topPointIndex);
 	M3_vertices[topPointIndex].pos = glm::vec3(0, 1, 0);
 	M3_vertices[topPointIndex].norm = glm::vec3(0, 1, 0);
 
-	//printf("Writing on Points: %d\n", bottomPointIndex);
 	M3_vertices[bottomPointIndex].pos = glm::vec3(0, -1, 0);
 	M3_vertices[bottomPointIndex].norm = glm::vec3(0, -1, 0);
 
@@ -331,21 +342,16 @@ void es3() {
 			definedUpPoint = firstUpperDiamPointIndex + (r - 1) * pointsPerCircle + point;
 			definedLowPoint = firstLowerPointIndex + (r - 1) * pointsPerCircle + point;
 
-			//printf("Create point %d. DefinedLowPoint: %d\n", r, definedLowPoint);
-
-			//printf("Writing on Points: %d\n", definedUpPoint);
 			x = cos(2 * pi / pointsPerCircle * point) * cos(pi / 2 / radius * r);
 			y = sin(pi / 2 / radius * r);
 			z = sin(2 * pi / pointsPerCircle * point) * cos(pi / 2 / radius * r);
 			M3_vertices[definedUpPoint].pos = glm::vec3(x, y, z);
 			M3_vertices[definedUpPoint].norm = glm::vec3(x, y, z);
 
-			//printf("Writing on Points: %d\n", definedLowPoint);
 			M3_vertices[definedLowPoint].pos = glm::vec3(x, -y, z);
 			M3_vertices[definedLowPoint].norm = glm::vec3(x, -y, z);
 
 			//upSphere
-			//printf("Writing on Indice: %d\n", (definedUpPoint - firstUpperDiamPointIndex - 1));
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1)] = definedUpPoint;
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1) + 1] = definedUpPoint - 1;
 			M3_indices[6 * (definedUpPoint - firstUpperDiamPointIndex - 1) + 2] = definedUpPoint - 1 - pointsPerCircle;
@@ -358,7 +364,6 @@ void es3() {
 
 			//downSphere
 			writeOn = firstInternalTriangleFromMiddleDownIndex + (definedLowPoint - firstLowerPointIndex - 1) * 2;
-			//printf("Writing on Indice: %d\n", writeOn);
 			M3_indices[3 * writeOn] = definedLowPoint;
 			M3_indices[3 * writeOn + 1] = definedLowPoint - 1;
 			if (r == 1)
@@ -437,7 +442,7 @@ void es3() {
 	}
 }
 
-void es4() {
+void spring_4() {
 	int pointsPerCircle = 10;
 	int circlesPerRotation = 10;
 	int rotations = 5;
@@ -453,7 +458,7 @@ void es4() {
 	smallTheta = pi / pointsPerCircle * 2;
 	bigTheta = pi / circlesPerRotation * 2;
 
-	glm::vec3 orientationVector;
+	glm::vec3 orientationVector, center;
 
 
 	int writeOn, currentPoint;
@@ -461,7 +466,11 @@ void es4() {
 	for (int currentRotation = 0; currentRotation < rotations; currentRotation++) {
 
 		for (int currentCircleInRotation = 0; currentCircleInRotation < circlesPerRotation; currentCircleInRotation++) {
-			orientationVector.y = sin(bigTheta * currentCircleInRotation + bigTheta / 2);
+			
+			//center of current circle to draw
+			center.x = bigRadius * sin(bigTheta * currentCircleInRotation);
+			center.y = bigRadius * cos(bigTheta * currentCircleInRotation);
+			center.z = deltaY * (currentRotation * circlesPerRotation + currentCircleInRotation);
 
 			for (int currentPointInCircle = 0; currentPointInCircle < pointsPerCircle; currentPointInCircle++) {
 
@@ -471,15 +480,14 @@ void es4() {
 					currentPointInCircle;
 				writeOn = currentPoint;
 
-				orientationVector.x = cos(smallTheta * currentPointInCircle + smallTheta / 2);
-				orientationVector.z = sin(smallTheta * currentPointInCircle + smallTheta / 2);
-
 				distanceFromCenter = (bigRadius + cos(smallTheta * currentPointInCircle) * smallRadius);
 				x = (bigRadius + smallRadius * cos(smallTheta * currentPointInCircle)) * sin(bigTheta * currentCircleInRotation);
 				y = (bigRadius + smallRadius * cos(smallTheta * currentPointInCircle)) * cos(bigTheta * currentCircleInRotation);
 				z = smallRadius * sin(smallTheta * currentPointInCircle) + deltaY * (currentRotation * circlesPerRotation + currentCircleInRotation);
 
 				M4_vertices[writeOn].pos = glm::vec3(x, y, z);
+				orientationVector = glm::normalize(M4_vertices[writeOn].pos - center);
+
 				M4_vertices[writeOn].norm = orientationVector;
 
 
@@ -509,12 +517,12 @@ void es4() {
 }
 
 void setPoint(int pos, float x, float y, float z) {
-
+	int shift = 8;
 	M1_vertices[pos].pos = glm::vec3(x, y, z);
-	M1_vertices[pos + 8].pos = glm::vec3(x, y, z);
-	M1_vertices[pos + 16].pos = glm::vec3(x, y, z);
+	M1_vertices[pos + shift].pos = glm::vec3(x, y, z);
+	M1_vertices[pos + 2 * shift].pos = glm::vec3(x, y, z);
 	M1_vertices[pos].norm = glm::vec3(x, 0.0f, 0.0f);
-	M1_vertices[pos + 8].norm = glm::vec3(0.0f, y, 0.0f);
-	M1_vertices[pos + 16].norm = glm::vec3(0.0f, 0.0f, z);
+	M1_vertices[pos + shift].norm = glm::vec3(0.0f, y, 0.0f);
+	M1_vertices[pos + 2 * shift].norm = glm::vec3(0.0f, 0.0f, z);
 }
 
