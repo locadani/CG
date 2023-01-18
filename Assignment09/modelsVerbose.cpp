@@ -1,13 +1,10 @@
 #define pi 3.14
+#define indicesArrayLengthEs1 3*12
 
 void es1();
 void es2();
 void es3();
 void es4();
-void drawCircle(int nPoints, float z);
-void drawRotatedCircle(int currentRotation, int currentCircle);
-
-void printPoint(const std::string& input, std::vector<float> value, int pos);
 
 // this function creates the geometries to be shown, and output thems
 // in global variables M1_vertices and M1_indices to M4_vertices and M4_indices
@@ -29,21 +26,15 @@ void makeModels() {
 void es1() {
 
 	//// M1 : Cube
-	// Replace the code below, that creates a simple square, with the one to create a cube.
-
-	// Resizes the vertices array. Repalce the values with the correct number of
-	// vertices components (3 * number of vertices)
 	M1_vertices.resize(3 * 8);
 
 
 
-	// Resizes the indices array. Repalce the values with the correct number of
-	// indices (3 * number of triangles)
-#define indicesArrayLengthEs1 3*12
+
 	M1_indices.resize(indicesArrayLengthEs1);
 
 	//FRONT FACE
-		// first vertex of M1
+	// first vertex of M1
 	M1_vertices[0] = -1.0;
 	M1_vertices[1] = -1.0;
 	M1_vertices[2] = -1.0;
@@ -63,7 +54,7 @@ void es1() {
 	M1_vertices[10] = 1.0;
 	M1_vertices[11] = -1.0;
 
-	//FRONT FACE
+	//BACK FACE
 	// 5 vertex of M1
 	M1_vertices[12 + 0] = -1.0;
 	M1_vertices[12 + 1] = -1.0;
@@ -90,13 +81,13 @@ void es1() {
 			4,7,0, //lt
 			3,7,0, //lb
 			3,7,2, //tl
-			7,1,6, //tr
+			7,2,6, //tr
 			6,2,1, //rt
 			6,5,1, //lb
 			0,4,5, //bl
 			5,0,1, //br
-			7,4,5, //fl
-			5,7,6
+			7,4,5, //bl
+			5,7,6  //br
 	};
 
 	for (int i = 0; i < indicesArrayLengthEs1; i++) {
@@ -655,112 +646,3 @@ void es4() {
 }
 
 
-
-void drawCircle(int nPoints, float z) {
-
-	//// M2 : Cylinder
-	// Replace the code below, that creates a simple rotated square, with the one to create a cylinder.
-
-	// Resizes the vertices array. Repalce the values with the correct number of
-	// vertices components (3 * number of vertices)
-
-
-	M2_vertices.resize((nPoints + 1) * 3);
-	//numCircleVertices + center
-	M2_indices.resize((nPoints) * 3);
-
-
-
-
-	//0 center
-	M2_vertices[(nPoints - 1) * 3] = 0;
-	M2_vertices[(nPoints - 1) * 3 + 1] = 0;
-	M2_vertices[(nPoints - 1) * 3 + 2] = z;
-
-	//1 first
-	M2_vertices[0] = cos(0);
-	M2_vertices[1] = sin(0);
-	M2_vertices[2] = z;
-
-
-	for (int point = 1; point < nPoints; point++) {
-
-		M2_vertices[3 * point] = cos(2 * pi / nPoints * point);
-		M2_vertices[3 * point + 1] = sin(2 * pi / nPoints * point);
-		M2_vertices[3 * point + 2] = z;
-
-		M2_indices[(point - 1) * 3] = 0;
-		M2_indices[(point - 1) * 3 + 1] = point - 1;
-		M2_indices[(point - 1) * 3 + 2] = point;
-
-	}
-
-	M2_indices[(nPoints - 1) * 3] = 0; //primo punto cerchio
-	M2_indices[(nPoints - 1) * 3 + 1] = nPoints - 1; //centro
-	M2_indices[(nPoints - 1) * 3 + 2] = nPoints - 2; // ultimo punto cerchio
-
-
-}
-
-void drawRotatedCircle(int currentRotation, int maxRotations, int currentCircle, int maxCircles, int nPoints) {
-
-	//float angle = (float)currentRotation / maxRotations * 2 * pi;
-
-	float angle = (float)currentCircle / maxCircles * 2 * pi;
-
-	int whereToWrite = (currentRotation * maxCircles + currentCircle) * nPoints;
-
-
-	//1 first
-	M4_vertices[whereToWrite * 3] = cos(0) * cos(angle);
-	M4_vertices[whereToWrite * 3 + 1] = sin(0);
-	M4_vertices[whereToWrite * 3 + 2] = sin(angle);
-
-	//TODO ora disegna sempre sullo stesso punto, deve spostare punto in cui si disegna
-	for (int point = 1; point < nPoints; point++) {
-		M4_vertices[3 * (whereToWrite + point)] = cos(2 * pi / nPoints * point) * cos(angle);
-		M4_vertices[3 * (whereToWrite + point) + 1] = sin(2 * pi / nPoints * point);
-		M4_vertices[3 * (whereToWrite + point) + 2] = sin(angle);
-	}
-}
-
-void prevCircles() {
-	/*
-	M2_vertices.resize((nPoints + 1) * 3);
-	//numCircleVertices + center
-	M2_indices.resize((nPoints) * 3);
-
-
-	//0 center
-	M2_vertices[(nPoints - 1) * 3] = 0;
-	M2_vertices[(nPoints - 1) * 3 + 1] = 0;
-	M2_vertices[(nPoints - 1) * 3 + 2] = 0;
-
-	//1 first
-	M2_vertices[0] = cos(0) * cos(angle);
-	M2_vertices[1] = sin(0);
-	M2_vertices[2] = sin(angle);
-
-
-	for (int point = 1; point < nPoints; point++) {
-
-		M2_vertices[3 * point] = cos(2 * pi / nPoints * point) * cos(angle);
-		M2_vertices[3 * point + 1] = sin(2 * pi / nPoints * point);
-		M2_vertices[3 * point + 2] = sin(angle);
-
-		M2_indices[(point - 1) * 3] = 0;
-		M2_indices[(point - 1) * 3 + 1] = point - 1;
-		M2_indices[(point - 1) * 3 + 2] = point;
-
-	}
-
-	M2_indices[(nPoints - 1) * 3] = 0; //primo punto cerchio
-	M2_indices[(nPoints - 1) * 3 + 1] = nPoints - 1; //centro
-	M2_indices[(nPoints - 1) * 3 + 2] = nPoints - 2; // ultimo punto cerchio*/
-}
-
-
-void printPoint(const std::string& input, std::vector<float> value, int pos) {
-
-	printf("%s -> x: %f, y: %f, z: %f\n", input.c_str(), value[pos], value[pos + 2], value[pos + 1]);
-}
