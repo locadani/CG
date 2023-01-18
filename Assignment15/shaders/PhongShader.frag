@@ -60,16 +60,16 @@ vec3 spot_light_color(vec3 pos) {
     vec3 distanceVector = gubo.lightPos - pos;
     float distanceModulus = length(distanceVector);
     vec3 lx = normalize(distanceVector);
-    float g = gubo.coneInOutDecayExp.z; 
-    float beta = gubo.coneInOutDecayExp.w; 
-	float l = pow(g/distanceModulus, beta);
-	float toClampValue = (dot(lx, gubo.lightDir) - gubo.coneInOutDecayExp.x) 
+    float g = gubo.coneInOutDecayExp.z;
+    float beta = gubo.coneInOutDecayExp.w;
+    float l = pow(g/distanceModulus, beta);
+    float toClampValue = 
+	(dot(lx, gubo.lightDir) - gubo.coneInOutDecayExp.x) 
 		/ 
 	(gubo.coneInOutDecayExp.y - gubo.coneInOutDecayExp.x);
-	float clampedFactor = clamp(toClampValue, 0, 1);
-	
-	
-	return l * clampedFactor * gubo.lightColor;
+    float clampedFactor = clamp(toClampValue, 0, 1);
+    
+    return l * clampedFactor * gubo.lightColor;
 }
 
 /**** To from here *****/
