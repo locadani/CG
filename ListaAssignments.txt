@@ -1,0 +1,20 @@
+1 - Disegna triangoli su casa
+2 - Basic transformations
+3 - Ancora transformations
+4 - Differenti projections (isometrie, dimetric, trimetric,cabinet)
+5 - Parallel projections (omino fisso nella stazione)
+6 - View Matrices (prima persona, terza persona)
+7 - World matrice (euler angle, quaternions)
+8 - Robot terza persona nella stazione
+9 - Crea triangoli per fare forme
+10 - Compila shader
+11 - Navicella che cambia colore
+12 - Crea programma Vulkan da zero
+13 - Prosegui 12
+14 - Prosegui 13
+15 - Direct light models (direct, point, point with decay, spot)
+16 - BRDF models (Lambert, phong, toon, oren nayar)
+17 - Ambient lighting
+18 - Prosegui 9 aggiungendo riflessi
+19 - Coordinate texture
+20 - Usa texture in shader
