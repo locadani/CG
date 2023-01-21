@@ -25,7 +25,6 @@ layout(binding = 2) uniform GlobalUniformBufferObject {
 /**** Modify from here *****/
 
 
-//WORKS
 vec3 Lambert_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C) {
 	// Lambert Diffuse BRDF model
 	// in all BRDF parameters are:
@@ -34,15 +33,15 @@ vec3 Lambert_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C) {
 	// vec3 V : view direction
 	// vec3 C : main color (diffuse color, or specular color)
 	
-	return C * clamp(dot(L, N), 0, 1);
+	return C * max(dot(L, N), 0);
 }
 
 vec3 Oren_Nayar_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float sigma) {
 	// Directional light direction
 	// additional parameter:
 	// float sigma : roughness of the material
-	vec3 lx = L; //to fix
-	vec3 wr = -V; //to fix
+	vec3 lx = L;
+	vec3 wr = -V;
 	float thetaI = acos(dot(lx, N));
 	float thetaR= acos(dot(wr, N));
 	float alpha = max(thetaI, thetaR);
@@ -56,13 +55,13 @@ vec3 Oren_Nayar_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float sigma) {
 	return vecL * (A + B * G * sin(alpha) * tan(beta));
 }
 
-//works
+
 vec3 Phong_Specular_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float gamma)  {
 	// Phong Specular BRDF model
 	// additional parameter:
 	// float gamma : exponent of the cosine term
-	vec3 lx = L; //to fix
-	vec3 rlx = 2 * N * dot(lx, N) - lx;
+	
+	vec3 rlx = 2 * N * dot(L, N) - L;
 	return C * pow(clamp(dot(V, rlx), 0, 1), gamma);
 }
 
