@@ -69,7 +69,7 @@ vec3 spot_light_color(vec3 pos) {
 	(gubo.coneInOutDecayExp.y - gubo.coneInOutDecayExp.x);
     float clampedFactor = clamp(toClampValue, 0, 1);
     
-    return l * clampedFactor * gubo.lightColor;
+    return clampedFactor * gubo.lightColor;
 }
 
 /**** To from here *****/
