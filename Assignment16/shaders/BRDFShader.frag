@@ -1,4 +1,5 @@
- #version 450#extension GL_ARB_separate_shader_objects : enable
+ #version 450
+#extension GL_ARB_separate_shader_objects : enable
 
 layout(location = 0) in vec3 fragPos;
 layout(location = 1) in vec3 fragNorm;
@@ -23,7 +24,8 @@ layout(binding = 2) uniform GlobalUniformBufferObject {
 
 /**** Modify from here *****/
 
-//WORKS
+
+//WORKS
 vec3 Lambert_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C) {
 	// Lambert Diffuse BRDF model
 	// in all BRDF parameters are:
@@ -38,15 +40,28 @@ vec3 Lambert_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C) {
 vec3 Oren_Nayar_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float sigma) {
 	// Directional light direction
 	// additional parameter:
-	// float sigma : roughness of the material	vec3 lx = L; //to fix	vec3 wr = -V; //to fix	float thetaI = acos(dot(lx, N));	float thetaR= acos(dot(wr, N));	float alpha = max(thetaI, thetaR);	float beta = min(thetaI, thetaR);	float A = 1-0.5*(pow(sigma, 2) / (pow(sigma, 2) + 0.33));	float B = 0.45*(pow(sigma, 2) / (pow(sigma, 2) + 0.09));
-	vec3 vI = normalize(lx - dot(lx, N) * N);	vec3 vR = normalize(wr - dot(wr, N) * N);	float G = max(0, dot(vI, vR));	vec3 vecL = C * clamp(dot(lx, N), 0, 1);
+	// float sigma : roughness of the material
+	vec3 lx = L; //to fix
+	vec3 wr = -V; //to fix
+	float thetaI = acos(dot(lx, N));
+	float thetaR= acos(dot(wr, N));
+	float alpha = max(thetaI, thetaR);
+	float beta = min(thetaI, thetaR);
+	float A = 1-0.5*(pow(sigma, 2) / (pow(sigma, 2) + 0.33));
+	float B = 0.45*(pow(sigma, 2) / (pow(sigma, 2) + 0.09));
+	vec3 vI = normalize(lx - dot(lx, N) * N);
+	vec3 vR = normalize(wr - dot(wr, N) * N);
+	float G = max(0, dot(vI, vR));
+	vec3 vecL = C * clamp(dot(lx, N), 0, 1);
 	return vecL * (A + B * G * sin(alpha) * tan(beta));
 }
-//works
+
+//works
 vec3 Phong_Specular_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float gamma)  {
 	// Phong Specular BRDF model
 	// additional parameter:
-	// float gamma : exponent of the cosine term	vec3 lx = L; //to fix
+	// float gamma : exponent of the cosine term
+	vec3 lx = L; //to fix
 	vec3 rlx = 2 * N * dot(lx, N) - lx;
 	return C * pow(clamp(dot(V, rlx), 0, 1), gamma);
 }
@@ -55,14 +70,34 @@ vec3 Toon_Diffuse_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, vec3 Cd, float thr) {
 	// Toon Diffuse Brdf
 	// additional parameters:
 	// vec3 Cd : color to be used in dark areas
-	// float thr : color threshold	vec3 color;	float dotProduct = dot(L, N);		if (dotProduct > thr)		color = C;	else if (dotProduct > 0)		color = Cd;	else		color = vec3(0,0,0);
+	// float thr : color threshold
+	vec3 color;
+	float dotProduct = dot(L, N);
+	
+	if (dotProduct > thr)
+		color = C;
+	else if (dotProduct > 0)
+		color = Cd;
+	else
+		color = vec3(0,0,0);
 	return color;
 }
 
 vec3 Toon_Specular_BRDF(vec3 L, vec3 N, vec3 V, vec3 C, float thr)  {
 	// Directional light direction
 	// additional parameter:
-	// float thr : color threshold		vec3 rlx = 2 * N * dot(L, N) - L;		vec3 color;	float dotProduct = dot(V, rlx);		if (dotProduct > thr)		color = C;	else		color = vec3(0, 0, 0);	return color;
+	// float thr : color threshold
+	
+	vec3 rlx = 2 * N * dot(L, N) - L;
+	
+	vec3 color;
+	float dotProduct = dot(V, rlx);
+	
+	if (dotProduct > thr)
+		color = C;
+	else
+		color = vec3(0, 0, 0);
+	return color;
 }
 
 

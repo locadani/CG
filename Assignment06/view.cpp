@@ -18,6 +18,3 @@ glm::mat4 LookAtMat(glm::vec3 Pos, glm::vec3 aim, float Roll) {
 	glm::mat4 out = glm::rotate(glm::lookAt(Pos, aim, up), Roll, glm::vec3(0, 0, 1));
 	return out;
 }
-
-
-

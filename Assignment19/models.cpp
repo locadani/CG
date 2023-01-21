@@ -26,130 +26,7 @@ void makeModels() {
 
 	cube();
 
-	cylinder();/*
-	int i = 0;
-
-	int NSlices = 20;
-	float radius = 1;
-	float height = 1;
-	float cx = 0, cy = 0, cz = -3; // Center of the model, not of the face!
-
-	// Vertices definitions
-	// For NSlices, considering only the top surface, we need NSlices + 1 vertexes (considering also the center)
-	M2_vertices.resize(((NSlices + 1) * 3) * 2 * 2 + 2); // final + 2 to replicate last vertices to wrap the texture
-	int middle_index = ((NSlices + 1) * 3) * 2;
-
-	i = 0;
-
-	// Top face
-	M2_vertices[i].pos = glm::vec3(cx, cy + height, cz);
-	M2_vertices[i].norm = glm::vec3(0, 1, 0);
-	M2_vertices[i].UV = glm::vec2(0.625, 0.125);
-
-	M2_vertices[middle_index + i].pos = glm::vec3(cx, cy + height, cz);
-	M2_vertices[middle_index + i].norm = glm::vec3(0, 1, 0);
-	M2_vertices[middle_index + i].UV = glm::vec2(0.625, 0.125);
-	i = i + 1;
-
-	float x, y, z, u, v;
-	float center_u = 0.625, shift_u = 0.25;
-	float center_v = 0.125;
-	float uv_radius = 0.125;
-	int initial_i = i;
-
-	for (i; i <= NSlices; i++) {
-		// Top
-		x = cx + radius * cos((float)(i - 1) / NSlices * 2.0 * M_PI); // x of the vertex
-		y = cy + height;                                        // y of the vertex
-		z = cz + radius * sin((float)(i - 1) / NSlices * 2.0 * M_PI); // z of the vertex
-
-		u = center_u + uv_radius * cos((float)(i - 1) / NSlices * 2.0 * M_PI);
-		v = center_v + uv_radius * sin((float)(i - 1) / NSlices * 2.0 * M_PI);
-
-		M2_vertices[i].pos = glm::vec3(x, y, z);
-		M2_vertices[i].norm = glm::vec3(cos((float)(i - 1) / NSlices * 2.0 * M_PI), 0, sin((float)i / NSlices * 2.0 * M_PI));
-		M2_vertices[i].UV = glm::vec2(0.5 + 0.5 * (i - 1) / NSlices, 0.25);
-
-		M2_vertices[middle_index + i].pos = glm::vec3(x, y, z);
-		M2_vertices[middle_index + i].norm = glm::vec3(0, 1, 0);
-		M2_vertices[middle_index + i].UV = glm::vec2(u, v);
-
-		// Bottom
-		x = cx + radius * cos((float)(i - 1) / NSlices * 2.0 * M_PI); // x of the vertex
-		y = cy - height;                                        // y of the vertex
-		z = cz + radius * sin((float)(i - 1) / NSlices * 2.0 * M_PI); // z of the vertex
-
-		u = center_u + shift_u + uv_radius * cos((float)(i - 1) / NSlices * 2.0 * M_PI);
-		v = center_v + uv_radius * sin((float)(i - 1) / NSlices * 2.0 * M_PI);
-
-		M2_vertices[NSlices + 1 + i].pos = glm::vec3(x, y, z);
-		M2_vertices[NSlices + 1 + i].norm = glm::vec3(cos((float)(i - 1) / NSlices * 2.0 * M_PI), 0, sin((float)i / NSlices * 2.0 * M_PI));
-		M2_vertices[NSlices + 1 + i].UV = glm::vec2(0.5 + 0.5 * (i - 1) / NSlices, 0.5);
-
-		M2_vertices[middle_index + NSlices + 1 + i].pos = glm::vec3(x, y, z);
-		M2_vertices[middle_index + NSlices + 1 + i].norm = glm::vec3(0, -1, 0);
-		M2_vertices[middle_index + NSlices + 1 + i].UV = glm::vec2(u, v);
-	}
-	// First vertexes replica to wrap the texture around
-	int lastIndex = ((NSlices + 1) * 3) * 2 * 2;
-	M2_vertices[lastIndex].pos = M2_vertices[initial_i].pos;
-	M2_vertices[lastIndex].norm = glm::vec3(0, 1, 0);
-	M2_vertices[lastIndex].UV = glm::vec2(1.0, 0.25);
-
-	M2_vertices[lastIndex + 1].pos = M2_vertices[initial_i + NSlices + 1].pos;
-	M2_vertices[lastIndex + 1].norm = glm::vec3(0, 1, 0);
-	M2_vertices[lastIndex + 1].UV = glm::vec2(1.0, 0.25);
-
-	printf("Top face: %d\n", i);
-
-	// Bottom face
-	M2_vertices[i].pos = glm::vec3(cx, cy - height, cz);
-	M2_vertices[i].norm = glm::vec3(0, -1, 0);
-	M2_vertices[i].UV = glm::vec2(0.875, 0.125);
-
-	M2_vertices[middle_index + i].pos = glm::vec3(cx, cy - height, cz);
-	M2_vertices[middle_index + i].norm = glm::vec3(0, -1, 0);
-	M2_vertices[middle_index + i].UV = glm::vec2(0.875, 0.125);
-
-	// Indexes definitions
-	int totalIndicesCount = 3 * 4 * NSlices;
-	M2_indices.resize(totalIndicesCount);
-
-	// Top and bottom faces
-	i = 0;
-	for (; i < NSlices; i++) {
-		M2_indices[i * 3 + 0] = 0 + middle_index;
-		M2_indices[i * 3 + 1] = i + 1 + middle_index;
-		M2_indices[i * 3 + 2] = (i + 1) % NSlices + 1 + middle_index;
-
-		int base = NSlices + 1;
-		M2_indices[(NSlices + i) * 3 + 0] = base + middle_index;
-		M2_indices[(NSlices + i) * 3 + 1] = base + i + 1 + middle_index;
-		M2_indices[(NSlices + i) * 3 + 2] = base + (i + 1) % NSlices + 1 + middle_index;
-	}
-	printf("First face indices: %d\n", i);
-	printf("Second face indices: %d\n", i + NSlices);
-
-	// Sides
-	int starting_index = 2 * NSlices * 3;
-	for (int j = 0; j < NSlices; j++) {
-		M2_indices[starting_index + j * 3 + 0] = j + 1;
-		M2_indices[starting_index + j * 3 + 1] = (j + 1) % NSlices + 1;
-		M2_indices[starting_index + j * 3 + 2] = NSlices + j + 2;
-
-		M2_indices[starting_index + (NSlices + j) * 3 + 0] = NSlices + j + 2;
-		M2_indices[starting_index + (NSlices + j) * 3 + 1] = NSlices + (j + 1) % NSlices + 2;
-		M2_indices[starting_index + (NSlices + j) * 3 + 2] = (j + 1) % NSlices + 1;
-
-		// Texture wrapping
-		if (j == NSlices - 1) {
-			M2_indices[starting_index + j * 3 + 1] = lastIndex;
-			M2_indices[starting_index + (NSlices + j) * 3 + 1] = lastIndex + 1;
-			M2_indices[starting_index + (NSlices + j) * 3 + 2] = lastIndex;
-		}
-	}
-	*/
-
+	cylinder();
 }
 
 void cube() {
@@ -311,31 +188,12 @@ void cube() {
 
 	for (int i = 0; i < indicesArrayLengthEs1; i++) 
 		M1_indices[i] = indices[i];
-
-	if (false) {
-
-		for (int i = 0; i < numberOfPoints; i++)
-			print(i);
-
-		printf("\n\nPrinting indices: \n");
-		for (int i = 0; i < indicesArrayLengthEs1; i++) {
-			printf("%d", M1_indices[i]);
-
-			if ((i + 1) % 6 == 0)
-				printf("\n\n");
-			else if ((i + 1) % 3 == 0)
-				printf("\n");
-			else
-				printf(",");
-		}
-	}
-
 }
 
 void cylinder() {
 
 	double deltaPixel = 0.125;
-	double x0 = 4*deltaPixel, y0 = 0;// deltaPixel * 4;
+	double x0 = 4*deltaPixel, y0 = 0;
 	int nCircleVertices = 20;
 
 	glm::vec2 centerTopCan = glm::vec2(x0 + deltaPixel, y0 + deltaPixel);
