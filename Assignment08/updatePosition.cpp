@@ -4,6 +4,16 @@ glm::mat4 getRobotWorldMatrix(GLFWwindow* window) {
 	static float scale = 0.05, roll = 0, yaw = 0;
 	static glm::vec3 pos = glm::vec3(-3, 0, 2);	// variable to store robot position
 	static glm::vec3 rot = glm::vec3(-3, 0, 2);
+	
+	static auto startTime = std::chrono::high_resolution_clock::now();
+	static float lastTime = 0.0f;
+	
+	auto currentTime = std::chrono::high_resolution_clock::now();
+	float time = std::chrono::duration<float, std::chrono::seconds::period>
+				(currentTime - startTime).count();
+	float deltaT = time - lastTime;
+	lastTime = time;
+	
 
 
 
@@ -12,36 +22,36 @@ glm::mat4 getRobotWorldMatrix(GLFWwindow* window) {
 			glm::vec3(
 				glm::rotate(glm::mat4(1.0f), yaw, glm::vec3(0.0f, 1.0f, 0.0f)) *
 				glm::vec4(1, 0, 0, 1)
-			) * scale;
+			) * deltaT;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_S)) {
 		pos -= glm::vec3(
 			glm::rotate(glm::mat4(1.0f), yaw, glm::vec3(0.0f, 1.0f, 0.0f)) *
 			glm::vec4(1, 0, 0, 1)
-		) * scale;
+		) * deltaT;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_A)) {
 		pos -= glm::vec3(
 			glm::rotate(glm::mat4(1.0f), yaw, glm::vec3(0.0f, 1.0f, 0.0f)) *
 			glm::vec4(0, 0, 1, 1)
-		) * scale;
+		) * deltaT;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_D)) {
 		pos += glm::vec3(
 			glm::rotate(glm::mat4(1.0f), yaw, glm::vec3(0.0f, 1.0f, 0.0f)) *
 			glm::vec4(0, 0, 1, 1)
-		) * scale;
+		) * deltaT;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_Q)) {
-		yaw += scale;
+		yaw += deltaT;
 	}
 
 	if (glfwGetKey(window, GLFW_KEY_E)) {
-		yaw -= scale;
+		yaw -= deltaT;
 	}
 
 
